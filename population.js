@@ -21,6 +21,10 @@ const Author = mongoose.model('Author', new mongoose.Schema({
 
 const Course = mongoose.model('Course', new mongoose.Schema({
   name: String,
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Author'
+  }
 }));
 
 /**
@@ -50,15 +54,38 @@ async function createCourse(name, author) {
 async function listCourses() { 
   const courses = await Course
     .find()
-    .select('name');
+    // this will list all fields. You can choose which fields to show by adding more arguments
+    .populate('author', 'name -_id') // seperate fields with a space. To exclude use '-theField' syntax
+    // .populate('category', 'name') // you can have multiple :)
+    .select('name author');
   console.log(courses);
 }
 
 /**
  * Calls
  */
-createAuthor('Mosh', 'My bio', 'My Website');
+// createAuthor('Mosh', 'My bio', 'My Website');
 
-// createCourse('Node Course', 'authorId')
+// createCourse('Node Course', '5d3993ec529a9c4abc8deff3');
 
-// listCourses();
+listCourses();
+
+/**
+ * listCourses() results without populate call.
+ * 
+ * {
+ *  _id: ..., name: ..., author: ...
+ * }
+ * 
+ * with populate call.
+ * 
+ * {
+ *  _id: ...,
+ *  name: ...,
+ *  author: {
+ *    _id: ...,
+ *    name: ...,
+ *    etc...
+ * }
+ * }
+ */
