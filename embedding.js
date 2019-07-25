@@ -44,18 +44,25 @@ async function listCourses() {
   console.log(courses);
 }
 
-async function updateAuthor(courseId) {
-  const course = await Course.update({ _id: courseId}, {
-    $unset: {
-      'author': ''
-    }
-  });
+async function addAuthor(courseId, author) {
+  const course = await Course.findById(courseId);
+  course.authors.push(author);
+  course.save();
+}
+
+async function removeAuthor(courseId, authorId) {
+  const course = await Course.findById(courseId);
+  const author = course.authors.id(authorId);
+  author.remove();
+  course.save();
 }
 
 /**
  * Calls
  */
-createCourse('Node Course',[
-    new Author({ name: 'Mosh' }),
-    new Author({ name: 'John' })
-]);
+// createCourse('Node Course',[
+//     new Author({ name: 'Mosh' }),
+//     new Author({ name: 'John' })
+// ]);
+// addAuthor('5d39a01844df114a2016b362', new Author({ name: 'Amy' }));
+removeAuthor('5d39a01844df114a2016b362', '5d39a0b20b73b053f831757e');
