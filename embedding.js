@@ -10,9 +10,9 @@ mongoose.connect('mongodb://localhost/playground')
   .then(() => console.log('Connected to MongoDB...'))
   .catch(err => console.error('Could not connect to MongoDB...', err));
 
-  /**
-   * Models
-   */
+/**
+ * Models
+ */
 const authorSchema = new mongoose.Schema({
   name: String,
   bio: String,
@@ -22,7 +22,8 @@ const authorSchema = new mongoose.Schema({
 const Author = mongoose.model('Author', authorSchema);
 
 const Course = mongoose.model('Course', new mongoose.Schema({
-  name: String
+  name: String,
+  author: authorSchema
 }));
 
 /**
@@ -43,7 +44,14 @@ async function listCourses() {
   console.log(courses);
 }
 
+async function updateAuthor(courseId) {
+  const course = await Course.findById(courseId);
+  course.author.name = 'Mosh Hamedani';
+  course.save();
+}
+
 /**
  * Calls
  */
-createCourse('Node Course', new Author({ name: 'Mosh' }));
+// createCourse('Node Course', new Author({ name: 'Mosh' }));
+updateAuthor('5d399cc86919ef4c0c1db119');
