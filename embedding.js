@@ -23,7 +23,10 @@ const Author = mongoose.model('Author', authorSchema);
 
 const Course = mongoose.model('Course', new mongoose.Schema({
   name: String,
-  author: authorSchema
+  author: {
+    type: authorSchema,
+    required: true
+  }
 }));
 
 /**
@@ -45,10 +48,10 @@ async function listCourses() {
 }
 
 async function updateAuthor(courseId) {
-  // update directly in DB
+  // delete in DB directly
   const course = await Course.update({ _id: courseId}, {
-    $set: {
-      'author.name': 'John Smith'
+    $unset: {
+      'author': ''
     }
   });
 }
