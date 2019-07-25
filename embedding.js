@@ -23,19 +23,16 @@ const Author = mongoose.model('Author', authorSchema);
 
 const Course = mongoose.model('Course', new mongoose.Schema({
   name: String,
-  author: {
-    type: authorSchema,
-    required: true
-  }
+  authors: [authorSchema]
 }));
 
 /**
  * Functions
  */
-async function createCourse(name, author) {
+async function createCourse(name, authors) {
   const course = new Course({
     name, 
-    author
+    authors
   }); 
   
   const result = await course.save();
@@ -48,7 +45,6 @@ async function listCourses() {
 }
 
 async function updateAuthor(courseId) {
-  // delete in DB directly
   const course = await Course.update({ _id: courseId}, {
     $unset: {
       'author': ''
@@ -59,5 +55,7 @@ async function updateAuthor(courseId) {
 /**
  * Calls
  */
-// createCourse('Node Course', new Author({ name: 'Mosh' }));
-updateAuthor('5d399cc86919ef4c0c1db119');
+createCourse('Node Course',[
+    new Author({ name: 'Mosh' }),
+    new Author({ name: 'John' })
+]);
