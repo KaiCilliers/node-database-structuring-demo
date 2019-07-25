@@ -54,10 +54,7 @@ async function createCourse(name, author) {
 async function listCourses() { 
   const courses = await Course
     .find()
-    // this will list all fields. You can choose which fields to show by adding more arguments
-    .populate('author', 'name -_id') // seperate fields with a space. To exclude use '-theField' syntax
-    // .populate('category', 'name') // you can have multiple :)
-    .select('name author');
+    .populate('author', 'name -_id')
   console.log(courses);
 }
 
@@ -69,23 +66,3 @@ async function listCourses() {
 // createCourse('Node Course', '5d3993ec529a9c4abc8deff3');
 
 listCourses();
-
-/**
- * listCourses() results without populate call.
- * 
- * {
- *  _id: ..., name: ..., author: ...
- * }
- * 
- * with populate call.
- * 
- * {
- *  _id: ...,
- *  name: ...,
- *  author: {
- *    _id: ...,
- *    name: ...,
- *    etc...
- * }
- * }
- */
